@@ -1,4 +1,5 @@
-## DBMS Setup
+## Running Instructions
+### DBMS Setup
 ##### Installing MySQL
 ```
 $ sudo apt update
@@ -24,7 +25,7 @@ mysql> source /DatabaseDefinition.sql
 ```
 Or alternatively copy and paste the commands.
 
-## Running the server
+### Running the server
 #### Prerequites
 - `nodejs`
 - Install the node modules using `npm`, with the command `npm install`
