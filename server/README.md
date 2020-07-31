@@ -33,12 +33,7 @@ Or alternatively copy and paste the commands.
 
 #### Prerequites
 - `nodejs`
-- Install the node modules using `npm`, with the command `npm install`
-  - `express`
-  - `mysql`
-  - `get-json`
-  - `nodemon`
-  - `body-parser`
+- Install the node modules using `npm`, with the command `npm install`<br />
 
 #### To run the server
 Run the following command
