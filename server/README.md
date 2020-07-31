@@ -28,7 +28,7 @@ Or alternatively copy and paste the commands.
 ### Running the server
 
 #### Alphavantage API: 
-- Replace the API Key in the server file with your own generated API key
+- Replace the API Key in the server file with your own generated API key<br />
 ` Line 219 replace YOUR_API_KEY`
 
 #### Prerequites
