@@ -27,7 +27,7 @@ Or alternatively copy and paste the commands.
 ## Running the server
 #### Prerequites
 - `nodejs`
-- Node modules. Can be installed using `npm`, with the command `npm install <module>`
+- Install the node modules using `npm`, with the command `npm install`
   - `express`
   - `mysql`
   - `get-json`
@@ -35,7 +35,7 @@ Or alternatively copy and paste the commands.
   - `body-parser`
 
 #### To run the server
-Move to the `/PortfolioManagement/` directory and run the following command
+Run the following command
 ```
 $ npm start
 ```
