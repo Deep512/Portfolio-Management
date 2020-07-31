@@ -26,6 +26,10 @@ mysql> source /DatabaseDefinition.sql
 Or alternatively copy and paste the commands.
 
 ### Running the server
+
+#### Alphavantage API: 
+- Replace the API Key in the server file with your own generated API key
+
 #### Prerequites
 - `nodejs`
 - Install the node modules using `npm`, with the command `npm install`
