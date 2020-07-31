@@ -21,7 +21,7 @@ $ mysql -u root -p
 Enter password as `root` <br>
 Run all the commands in `/SQL_Queries/DatabaseDefinition.sql` by running
 ```MySQL
-mysql> source /DatabaseDefinition.sql
+mysql> source server/DatabaseDefinition.sql
 ```
 Or alternatively copy and paste the commands.
 
