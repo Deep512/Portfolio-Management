@@ -1,8 +1,9 @@
-let config = {
+const config = {
 	connectionLimit: 20,
+	port: 3306,
 	host: "localhost",
 	user: "root",
-	password: "deep1234",
+	password: "Mysql@1234",
 };
 
-module.exports = config;
+export default config;

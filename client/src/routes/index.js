@@ -1,0 +1,9 @@
+export const LOGIN = "/login",
+	REGISTER = "/register",
+	DASHBOARD = "/",
+	PROFILE = "/profile",
+	WATCHLIST = "/watch-list",
+	STOCKLIST = "/stocks",
+	STOCK = "/stock/:stockSymbol",
+	UPDATE_PROFILE = "/update-profile",
+	NOT_FOUND = "/not-found";

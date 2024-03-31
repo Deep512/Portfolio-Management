@@ -40,4 +40,4 @@ Run the following command
 ```
 $ npm start
 ```
-This will get the server code running on `localhost:3000`
+This will get the server code running on `localhost:8000`
