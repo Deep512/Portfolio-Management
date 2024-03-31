@@ -14,7 +14,8 @@ A web application that allows users to buy and sell shares.<br />
 2. Running Instructions for Node and React is specified in server and client folder respectively.<br />
 
 
-![Algorithm Working](/demo/infiniteScroll.gif)<br />
+![Infinite Scroll with Pagination](/infiniteScroll.mov)<br />
+![Search bar](/search.mov)<br />
 
 ## Algorithms:
 *Weighted*<br />
