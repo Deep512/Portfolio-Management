@@ -15,7 +15,7 @@ A web application that allows users to buy and sell shares.<br />
 
 
 <!-- ![Algorithm Working](/demo/infiniteScroll.gif)<br /> -->
-<img src="/demo/infiniteScroll.gif" width="250" height="250"/>
+<img src="/demo/infiniteScroll.gif" width="1000" height="750"/>
 
 ## Algorithms:
 *Weighted*<br />
