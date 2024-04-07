@@ -1,7 +1,16 @@
 // ################################################################### MySQL
 
 import mysql from "mysql"
-import config from "./config.js"
+import dotenv from "dotenv"
+dotenv.config()
+
+const config = {
+	connectionLimit: 20,
+	port: process.env.DB_PORT,
+	host: process.env.DB_HOST,
+	user: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
+}
 
 var dbms = mysql.createConnection(config)
 
@@ -9,7 +18,6 @@ var pool = mysql.createPool(config)
 var noOfStocks = 0
 dbms.connect(function (err) {
 	if (err) throw err
-
 	dbms.query("USE Portfolio;", function (err, result) {
 		if (err) throw err
 		else {
@@ -35,8 +43,6 @@ import bodyParser from "body-parser"
 import axios from "axios"
 import cors from "cors"
 import { Server } from "socket.io"
-import dotenv from "dotenv"
-dotenv.config()
 
 var saltRounds = bcrypt.genSaltSync(10)
 var app = express()
