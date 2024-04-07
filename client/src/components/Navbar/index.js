@@ -1,11 +1,19 @@
-import React from "react";
-import "./index.css";
-import { Link, useNavigate } from "react-router-dom";
-import * as ROUTES from "../../routes";
+import React from "react"
+import "./index.css"
+import { Link, useNavigate } from "react-router-dom"
+import * as ROUTES from "../../routes"
 const Navbar = ({ isAuthenticated, setUserId }) => {
-	const navigate = useNavigate();
+	const navigate = useNavigate()
 	return isAuthenticated ? (
-		<nav style={{ height: "20%", paddingBottom: "0px", border: "2px" }}>
+		<nav
+			style={{
+				height: "20%",
+				paddingBottom: "0px",
+				border: "2px",
+				position: "sticky",
+				top: 0,
+			}}
+		>
 			<nav className="navbar navbar-inverse" style={{ marginBottom: "0px" }}>
 				<div
 					className="container-fluid"
@@ -107,7 +115,7 @@ const Navbar = ({ isAuthenticated, setUserId }) => {
 								style={{ fontSize: "17px" }}
 								className="navbar-link"
 								onClick={() => {
-									setUserId(null);
+									setUserId(null)
 								}}
 							>
 								<span className="glyphicon glyphicon-log-out"></span>
@@ -122,13 +130,17 @@ const Navbar = ({ isAuthenticated, setUserId }) => {
 		<nav
 			style={{
 				display: "flex",
-				width: "100%",
 				alignItems: "center",
+				position: "sticky",
+				top: 0,
+				boxShadow: "0 0 5px black",
+				zIndex: 1,
 			}}
+			className="navbar navbar-inverse"
 		>
 			<h2
 				className="link dim blue pa3 pointer"
-				onClick={() => navigate(ROUTES.DASHBOARD)}
+				onClick={() => navigate(ROUTES.STOCKLIST)}
 				style={{ padding: "10px", margin: "0 auto" }}
 			>
 				Portfolio Manager
@@ -149,7 +161,7 @@ const Navbar = ({ isAuthenticated, setUserId }) => {
 			</div>
 			<br />
 		</nav>
-	);
-};
+	)
+}
 
-export default Navbar;
+export default Navbar

@@ -1,58 +1,45 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext } from "react"
 import "./index.css"
 import UserContext from "../../context/userContext"
 import { useNavigate } from "react-router-dom"
 import { Skeleton } from "@mui/material"
 import * as ROUTES from "../../routes/index"
-
+import { getWatchList, delFromWatchList } from "../../resources/api"
+import { useQuery, useMutation, useQueryClient } from "react-query"
 const WatchList = () => {
-	const [watchList, setWatchList] = useState()
-
+	const queryClient = useQueryClient()
 	const { userId } = useContext(UserContext)
 	const navigate = useNavigate()
-	const getList = () => {
-		fetch("http://localhost:8000/watch-list", {
-			method: "post",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				id: userId,
-			}),
-		})
-			.then((response) => response.json())
-			.then((shares) => {
-				setWatchList(shares)
-			})
-	}
 
-	const deleteShare = (symbol) => {
-		fetch("http://localhost:8000/remove", {
-			method: "post",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				id: userId,
-				symbol: symbol,
-			}),
-		}).then((response) => response.json())
-		var filtered = watchList.filter(function (value, index, arr) {
-			return value["symbol"] !== symbol
-		})
-		setWatchList(filtered)
-	}
+	const {
+		data: watchList,
+		isError,
+		error,
+	} = useQuery({
+		queryKey: ["watchlist", { userId }],
+		queryFn: getWatchList,
+		staleTime: 10 * 1000 * 60,
+	})
+
+	const { mutateAsync: deleteShare } = useMutation({
+		mutationFn: delFromWatchList,
+		onSuccess: () => {
+			queryClient.invalidateQueries(["watchlist", { userId }])
+			queryClient.invalidateQueries(["userShareInfo"])
+		},
+	})
 
 	const setStock = (symbol) => {
 		navigate(`/stock/${symbol}`)
 	}
 
-	useEffect(() => {
-		getList()
-		// eslint-disable-next-line
-	}, [])
-
 	return (
 		<div>
 			<h1 style={{ color: "white", paddingTop: "70px" }}>My Watch List</h1>
 			<div id="link">
-				{watchList && watchList.length ? (
+				{isError ? (
+					<p>{error}</p>
+				) : watchList && watchList.length ? (
 					<table className="container">
 						<tbody>
 							{watchList.map((share) => (
@@ -69,7 +56,13 @@ const WatchList = () => {
 										</button>
 										<button
 											className="wishlist-actions"
-											onClick={() => deleteShare(share["symbol"])}
+											onClick={async () => {
+												try {
+													await deleteShare({ userId, symbol: share["symbol"] })
+												} catch (err) {
+													console.error(err)
+												}
+											}}
 										>
 											Remove
 										</button>

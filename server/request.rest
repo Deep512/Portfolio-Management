@@ -1,1 +1,0 @@
-get http://localhost:8000/paginated-stock-list?pageNumber=8&pageSize=1000

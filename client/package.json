@@ -8,6 +8,7 @@
     "@fontsource/roboto": "^5.0.12",
     "@mui/joy": "^5.0.0-beta.32",
     "@mui/material": "^5.15.14",
+    "@tanstack/react-query-devtools": "^5.29.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -21,6 +22,8 @@
     "react-helmet": "^6.0.0",
     "react-plotly.js": "^2.4.0",
     "react-plotlyjs": "^0.4.4",
+    "react-query": "^3.39.3",
+    "react-query-devtools": "^2.6.3",
     "react-router-dom": "^6.22.3",
     "react-script-tag": "^1.1.2",
     "react-scripts": "3.4.1",
@@ -47,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }

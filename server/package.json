@@ -9,10 +9,8 @@
 		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.18.3",
 		"cors": "^2.8.5",
-		"csv-parser": "^3.0.0",
-		"csvtojson": "^2.0.10",
+		"dotenv": "^16.4.5",
 		"express": "^4.17.1",
-		"get-json": "^1.0.1",
 		"http": "0.0.1-security",
 		"mysql": "^2.16.0",
 		"plotly": "^1.0.6",
@@ -25,6 +23,6 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "nodemon server.js"
 	},
-	"author": "Deep,Piyush,Prasad",
+	"author": "Deep",
 	"license": "MIT"
 }

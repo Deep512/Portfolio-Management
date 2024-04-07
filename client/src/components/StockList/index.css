@@ -33,14 +33,14 @@ input:focus {
 
 .search-results-container {
 	width: 50%;
-	z-index: -1;
 	background-color: #f7f6f2;
 	padding: 0.25em;
-	margin: 0.5em auto;
+	margin: 0.5em 25%;
 	border-radius: 10px;
 	box-shadow: 0 0 5px #ddd;
 	max-height: 200px;
 	overflow-y: scroll;
+	position: absolute;
 }
 
 .search-result {

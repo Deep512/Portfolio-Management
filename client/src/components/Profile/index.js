@@ -1,43 +1,27 @@
-import React, { useState, useEffect, useContext } from "react";
-import "./index.css";
-import UserContext from "../../context/userContext";
-import Loader from "../Loader";
+import React, { useContext } from "react"
+import "./index.css"
+import UserContext from "../../context/userContext"
+import Loader from "../Loader"
+import { useQuery } from "react-query"
+import { fetchProfileData } from "../../resources/api"
 
 const Profile = () => {
-	const [userName, setUserName] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [isLoading, setIsLoading] = useState(true);
-	const [current, setCurrent] = useState(0);
-	const [invested, setInvested] = useState(0);
-	const [returns, setReturns] = useState(0);
+	const { userId } = useContext(UserContext)
 
-	const { userId } = useContext(UserContext);
+	const {
+		data: userData,
+		isLoading,
+		isError,
+		error,
+		status,
+	} = useQuery({
+		queryKey: ["profile", { userId }],
+		queryFn: fetchProfileData,
+		staleTime: 10 * 60 * 1000,
+	})
 
-	const fetchUser = () => {
-		fetch("http://localhost:8000/profile", {
-			method: "post",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				id: userId,
-			}),
-		})
-			.then((response) => response.json())
-			.then((user) => {
-				setFirstName(user["firstname"]);
-				setLastName(user["lastname"]);
-				setUserName(user["username"]);
-				setCurrent(user["current"]);
-				setInvested(user["invested"]);
-				setReturns(user["returns"]);
-				setIsLoading(false);
-			});
-	};
-
-	useEffect(() => {
-		fetchUser();
-		// eslint-disable-next-line
-	}, []);
+	if (status === "success")
+		var { username, firstname, lastname, current, invested, returns } = userData
 
 	return (
 		<div className="profile-white-box">
@@ -51,13 +35,15 @@ const Profile = () => {
 			>
 				<p style={{ fontSize: "48px" }}>My Profile</p>
 				<br />
-				{isLoading ? (
+				{isError ? (
+					<p>{error.message}</p>
+				) : isLoading ? (
 					<Loader />
 				) : (
 					<div>
-						<p>Username : {userName}</p>
+						<p>Username : {username}</p>
 						<p>
-							Name : {firstName} {lastName}
+							Name : {firstname} {lastname}
 						</p>
 						<p>
 							Current holdings : {current} share
@@ -69,7 +55,7 @@ const Profile = () => {
 				)}
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default Profile;
+export default Profile

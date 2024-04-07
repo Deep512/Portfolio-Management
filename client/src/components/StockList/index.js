@@ -3,102 +3,93 @@ import { Helmet } from "react-helmet"
 import { useNavigate } from "react-router-dom"
 import CircularProgress from "@mui/joy/CircularProgress"
 import { Skeleton } from "@mui/material"
+import { useInfiniteQuery } from "react-query"
 
 import "./index.css"
 import Quote from "../Quote"
+import { getPaginatedStockList } from "../../resources/api"
 
-const PAGE_SIZE = 50
 const StockList = ({ socket }) => {
 	const navigate = useNavigate()
 
-	const [stocks, setStocks] = useState([])
 	const [searchResults, setSearchResults] = useState([])
 	const [keyword, setKeyword] = useState("")
-	const [isLoading, setIsLoading] = useState(true)
-	const [isNextPageLoading, setIsNextPageLoading] = useState(false)
-	const hasMore = useRef(true)
-	const pageNumber = useRef(1)
 	const scrollPosition = useRef(0)
 
+	// query to implememt paginated infinite scroll
+	const {
+		isFetching,
+		fetchNextPage,
+		data: paginatedResult,
+		hasNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["stockList"],
+		queryFn: ({ pageParam = 1 }) => getPaginatedStockList(pageParam),
+		getNextPageParam: (lastPage) => lastPage.next.pageNumber,
+		keepPreviousData: true,
+		staleTime: Infinity,
+	})
+
+	// Intersection observer and configuring the callback ref on the last element
 	const observer = useRef()
 	const lastStockRef = useCallback(
 		(node) => {
-			if (isLoading || isNextPageLoading) return
+			if (isFetching) return
 			if (observer.current) observer.current.disconnect()
 			observer.current = new IntersectionObserver(
 				(entries) => {
 					const entry = entries[0]
-					if (entry.isIntersecting && hasMore.current) {
-						fetchStocks()
+					if (entry.isIntersecting && hasNextPage) {
+						fetchNextPage()
 					}
 				},
 				{ threshold: 1 }
 			)
 			if (node) observer.current.observe(node)
 		},
-		[isLoading, isNextPageLoading]
+		[isFetching, hasNextPage, fetchNextPage]
 	)
 
-	const fetchSearchResults = (keyword) => {
-		if (socket?.id) {
-			socket.emit("search_keyword", keyword)
-		}
-	}
-
-	useEffect(() => {
-		socket &&
-			socket.on("search_result", (resp) => {
-				if (resp.error !== "") alert("Error: " + resp.error)
-				else setSearchResults(resp.data)
-			})
-	}, [socket])
-
-	const fetchStocks = (isFirstFetch = false) => {
-		if (isFirstFetch) setIsLoading(true)
-		else setIsNextPageLoading(true)
-
-		fetch(
-			`http://localhost:8000/paginated-stock-list?pageNumber=${encodeURIComponent(
-				pageNumber.current
-			)}&pageSize=${encodeURIComponent(PAGE_SIZE)}`
-		)
-			.then((response) => response.json())
-			.then((result) => {
-				if (result.next) {
-					pageNumber.current = result.next.pageNumber
-					hasMore.current = true
-				} else hasMore.current = false
-				setStocks((stocks) => [...stocks, ...result.results])
-				if (isFirstFetch) setIsLoading(false)
-				else setIsNextPageLoading(false)
-			})
-	}
-
+	// Store scroll position
 	const handleScroll = () => {
 		scrollPosition.current = window.scrollY
 	}
 
+	// Maintain scroll position for infinite scrolling
 	useEffect(() => {
 		window.scrollTo(0, scrollPosition.current)
-	}, [stocks])
+	}, [paginatedResult])
 
+	// add an event listener for scroll
 	useEffect(() => {
-		fetchStocks(true)
 		window.addEventListener("scroll", handleScroll)
 
 		return () => {
 			window.removeEventListener("scroll", handleScroll)
 		}
-		// eslint-disable-next-line
 	}, [])
 
-	const setStock = (symbol) => {
-		navigate(`/stock/${symbol}`)
-	}
+	// make a server call only after 1.5 seconds of user typing a keyword
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (keyword && socket?.id) {
+				socket.emit("search_keyword", keyword)
+			}
+		}, 1500)
+		return () => clearTimeout(timer)
+	}, [keyword, socket])
+
+	useEffect(() => {
+		socket &&
+			socket.on("search_result", (resp) => {
+				if (resp.error !== "") {
+					alert("Error: " + resp.error)
+				} else setSearchResults(resp.data)
+			})
+	}, [socket])
 
 	const onKeywordChange = (e) => {
 		setKeyword(e.target.value)
-		if (e.target.value !== "") fetchSearchResults(e.target.value)
 	}
 
 	return (
@@ -130,7 +121,7 @@ const StockList = ({ socket }) => {
 							<div
 								key={result["symbol"]}
 								className="search-result"
-								onClick={() => setStock(result["symbol"])}
+								onClick={() => navigate(`/stock/${result["symbol"]}`)}
 							>
 								<p style={{ fontWeight: "bold" }}>{result.symbol}</p>
 
@@ -140,27 +131,28 @@ const StockList = ({ socket }) => {
 					})}
 				</div>
 			)}
-			{stocks && stocks.length ? (
+			{paginatedResult?.pages?.length ? (
 				<table className="container">
 					<tbody>
-						{stocks?.map((stock, idx) => (
-							<tr
-								key={stock["symbol"]}
-								ref={idx + 1 === stocks.length ? lastStockRef : null}
-							>
-								<td>{stock["share_name"]}</td>
-								<td>
-									<button onClick={() => setStock(stock["symbol"])}>
-										View
-									</button>
-								</td>
-							</tr>
-						))}
+						{paginatedResult.pages
+							?.flatMap((page) => page.results)
+							.map((stock) => (
+								<tr key={stock["symbol"]}>
+									<td>{stock["share_name"]}</td>
+									<td>
+										<button
+											onClick={() => navigate(`/stock/${stock["symbol"]}`)}
+										>
+											View
+										</button>
+									</td>
+								</tr>
+							))}
 					</tbody>
 				</table>
 			) : (
 				<div style={{ width: "70%", margin: "3% auto" }}>
-					{[...Array(20).keys()].map((idx) => (
+					{[...Array(15).keys()].map((idx) => (
 						<div key={idx}>
 							<Skeleton
 								variant="rectangular"
@@ -172,8 +164,8 @@ const StockList = ({ socket }) => {
 					))}
 				</div>
 			)}
-			<div style={{ marginTop: "20px" }}>
-				{isNextPageLoading && (
+			<div ref={lastStockRef} style={{ marginTop: "20px" }}>
+				{isFetching && (
 					<CircularProgress thickness={1} variant="solid" size="md" />
 				)}
 				<Quote />

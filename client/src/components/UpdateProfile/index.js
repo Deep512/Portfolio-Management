@@ -1,61 +1,61 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import "./index.css";
-import { useNavigate } from "react-router-dom";
-import UserContext from "../../context/userContext";
-import * as ROUTES from "../../routes";
+import React, { useContext, useEffect, useRef, useState } from "react"
+import "./index.css"
+import { useNavigate } from "react-router-dom"
+import UserContext from "../../context/userContext"
+import * as ROUTES from "../../routes"
 
 const UpdateProfile = () => {
-	const [userName, setUserName] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [oldPassword, setOldPassword] = useState("");
-	const [newPassword, setNewPassword] = useState("");
-	const [confPassword, setConfPassword] = useState("");
-	const [flag, setFlag] = useState(false);
+	const [userName, setUserName] = useState("")
+	const [firstName, setFirstName] = useState("")
+	const [lastName, setLastName] = useState("")
+	const [oldPassword, setOldPassword] = useState("")
+	const [newPassword, setNewPassword] = useState("")
+	const [confPassword, setConfPassword] = useState("")
+	const [flag, setFlag] = useState(false)
 
-	const { userId } = useContext(UserContext);
-	const navigate = useNavigate();
-	const errorRef = useRef(null);
+	const { userId } = useContext(UserContext)
+	const navigate = useNavigate()
+	const errorRef = useRef(null)
 
 	const invalidDetails = (response) => {
 		if (response === "empty username") {
-			errorRef.current.innerHTML = "Username is required";
+			errorRef.current.innerHTML = "Username is required"
 		} else if (response === "username exists") {
-			errorRef.current.innerHTML = "Username already exists";
+			errorRef.current.innerHTML = "Username already exists"
 		} else if (response === "empty firstname") {
-			errorRef.current.innerHTML = "Firstname is required";
+			errorRef.current.innerHTML = "Firstname is required"
 		} else if (response === "incorrect old password") {
-			errorRef.current.innerHTML = "Old password is incorrect";
+			errorRef.current.innerHTML = "Old password is incorrect"
 		} else if (response === "empty new password") {
-			errorRef.current.innerHTML = "New password can't be empty";
+			errorRef.current.innerHTML = "New password can't be empty"
 		} else if (response === "unmatching password") {
-			errorRef.current.innerHTML = "Passwords don't match";
+			errorRef.current.innerHTML = "Passwords don't match"
 		}
-	};
+	}
 
 	const onUsernameChange = (event) => {
-		setUserName(event.target.value);
-	};
+		setUserName(event.target.value)
+	}
 
 	const onFnameChange = (event) => {
-		setFirstName(event.target.value);
-	};
+		setFirstName(event.target.value)
+	}
 
 	const onLnameChange = (event) => {
-		setLastName(event.target.value);
-	};
+		setLastName(event.target.value)
+	}
 
 	const onOldPasswordChange = (event) => {
-		setOldPassword(event.target.value);
-	};
+		setOldPassword(event.target.value)
+	}
 
 	const onPasswordChange = (event) => {
-		setNewPassword(event.target.value);
-	};
+		setNewPassword(event.target.value)
+	}
 
 	const onConfirmPasswordChange = (event) => {
-		setConfPassword(event.target.value);
-	};
+		setConfPassword(event.target.value)
+	}
 
 	const onUpdateProfile = () => {
 		fetch("http://localhost:8000/save", {
@@ -74,12 +74,12 @@ const UpdateProfile = () => {
 			.then((response) => response.json())
 			.then((user) => {
 				if (user["affectedRows"]) {
-					navigate(ROUTES.PROFILE);
+					navigate(ROUTES.PROFILE)
 				} else {
-					invalidDetails(user);
+					invalidDetails(user)
 				}
-			});
-	};
+			})
+	}
 
 	const fetchData = () => {
 		fetch("http://localhost:8000/update-profile", {
@@ -91,17 +91,17 @@ const UpdateProfile = () => {
 		})
 			.then((response) => response.json())
 			.then((user) => {
-				setUserName(user["username"]);
-				setFirstName(user["firstname"]);
-				setLastName(user["lastname"]);
-				setFlag(true);
-			});
-	};
+				setUserName(user["username"])
+				setFirstName(user["firstname"])
+				setLastName(user["lastname"])
+				setFlag(true)
+			})
+	}
 
 	useEffect(() => {
-		fetchData();
+		fetchData()
 		// eslint-disable-next-line
-	}, []);
+	}, [])
 
 	return (
 		<div>
@@ -197,7 +197,7 @@ const UpdateProfile = () => {
 				</div>
 			)}
 		</div>
-	);
-};
+	)
+}
 
-export default UpdateProfile;
+export default UpdateProfile

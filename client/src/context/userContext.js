@@ -1,7 +1,8 @@
-import { createContext } from "react";
+import { createContext } from "react"
 
 const UserContext = createContext({
 	userId: null,
 	setUserId: (userId) => {},
-});
-export default UserContext;
+	isAuthenticated: false,
+})
+export default UserContext
